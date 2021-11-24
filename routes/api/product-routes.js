@@ -2,52 +2,66 @@ const router = require('express').Router();
 const { Product, Category, Tag, ProductTag } = require('../../models');
 
 // The `/api/products` endpoint
-// get all products
-router.get('/', (req, res) => {
-  // find all products
-  // be sure to include its associated Category and Tag data
-  Product.findAll({
+// get all products // find all products
+// be sure to include its associated Category and Tag data
+
+router.get('/', async (req, res) => {
+  try {
+  const prodData = await Category.findAll({
     include: [
       {
-         Category,
+         model: Category,
+         attributes: [
+           'id', 
+           'category_name'
+          ],
       },
       {
         model: Tag,
         through :ProductTag,
-      }]
-  })
-    .then(productDb => res.json(productDb))
-    .catch(err => {
-      console.log(err);
-      res.status(500).json(err);
-    });
+      }],
+  });
+  res.status(200).json(prodData);
+  } catch (err) {
+  console.log(err);
+  res.status(500).json(err);
+  }
 });
 
 
-
-router.get('/', async (req, res) => {
-  // find all products
-  // be sure to include its associated Category and Tag data
+// find a single product by its `id`
+// be sure to include its associated Category and Tag data
+router.get('/:id', async (req, res) => {
   try {
-    const productData = await Product.findAll(
-      {
-        include: [
-          Category,
-        {
-           model: Tag,
-            through :ProductTag,}]
-      });
-    res.status(200).json(productData);
+    const prodData = await Product.findByPk(req.params.id, {
+      // Add Tag as a second model to JOIN with
+      include: [{ model: Category }, { model: Tag}],
+    });
 
+    if (!prodData) {
+      res.status(404).json({ message: 'Wrong id. No category found.' });
+      return;
+    }
+
+    res.status(200).json(prodData);
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
-// get one product
-router.get('/:id', (req, res) => {
-  // find a single product by its `id`
-  // be sure to include its associated Category and Tag data
+
+router.post('/', async (req, res) => {
+  try {
+    const prodData = await Product.create({
+      product_name: req.body.product_name,
+      price: req.body.price,
+      stock: req.body.stock,
+      tagIds: req.body.tagIds,
+    });
+    res.status(200).json(prodData);
+  } catch (err) {
+    res.status(400).json(err);
+  }
 });
 
 // create new product
@@ -124,8 +138,21 @@ router.put('/:id', (req, res) => {
     });
 });
 
-router.delete('/:id', (req, res) => {
-  // delete one product by its `id` value
-});
 
+  // route to delete one product by its `id` value
+router.delete('/:id', (req, res) => {
+  Product.destroy({
+    where: {
+      id: req.params.id,
+    },
+  })
+  .then((deletedProd) => {
+    if (!deletedProd){
+      res.status(404).json({message: 'Wrong id. Cannot delete.'});
+      return;
+    }
+    res.status(200).json(deletedProd);
+  })
+  .catch((err) => res.json(err));
+});
 module.exports = router;

@@ -14,12 +14,14 @@ Product.init(
       primaryKey: true,
       allowNull: false,
       autoIncrement: true
+      // pk: product_id 
     },
     category_id: {
       type: DataTypes.INTEGER,
+      // Store a reference of the `id` of the `Category` that owns this Product
       references: {
-        key: 'id',
         model: 'category',
+        key: 'id',
       },
     },
    product_name: {
@@ -27,14 +29,20 @@ Product.init(
       allowNull: false,
     },
     price: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DECIMAL,
       allowNull: false,
+      validate: {
+        isDecimal: true
+      }
     },
     stock: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
+      validate: {
+        isNumeric: true,
+        len: [10], //come back and check
+      }
     },
-    // define columns
   },
   {
     sequelize,
