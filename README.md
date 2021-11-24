@@ -29,7 +29,7 @@ Run the following commnand in the terminal:
 - node start
 
 ## Video:
-- <a href="">Video Link</a>
+- <a href="https://youtu.be/IvhfMdXY-5Q">Video Link</a>
 <img src='./assets/pic.png'>
 
 ## Contributing:
