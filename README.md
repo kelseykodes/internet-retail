@@ -2,7 +2,7 @@
 ![License: APACHE 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)
 
 # Description: 
-Configure a working Express.js API to use Sequelize to interact with a MySQL database.
+Configured a working Express.js API to use Sequelize to interact with a MySQL database.
 
 ## Table of Contents
   - [Installation](#installation)
@@ -17,6 +17,9 @@ Please install package manager NPM by running the following command in the termi
 - npm i 
 - npm sequelize
 
+Source your schema, then run the following in terminal:
+- npm start
+
 Optional! Intsall Jest to test code. Run the following command in terminal:
 - npm i jest
 
@@ -27,7 +30,7 @@ Run the following commnand in the terminal:
 
 ## Video:
 - <a href="">Video Link</a>
-<img src='./assets/img/pic.png'>
+<img src='./assets/pic.png'>
 
 ## Contributing:
   None.
